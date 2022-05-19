@@ -1,0 +1,81 @@
+# db
+db_data
+
+# frontend
+frontend/build
+frontend/node_modules
+frontend/.next/*
+!frontend/build/.empty
+
+# backend
+backend/*
+!backend/.htaccess
+!backend/wp-config.php
+!backend/wp-content/
+
+backend/wp-content/*
+!backend/wp-content/plugins
+
+/backend/wp-content/plugins/*
+!/backend/wp-content/plugins/rest-api
+!/backend/wp-content/plugins/updraftplus
+!/backend/wp-content/plugins/jwt-authentication-for-wp-rest-api
+!/backend/wp-content/plugins/disable-rest-api-and-require-jwt-oauth-authentication
+!/backend/wp-content/plugins/custom-headers
+!/backend/wp-content/plugins/api-status
+!/backend/wp-content/plugins/amazon-s3-and-cloudfront
+!/backend/wp-content/plugins/amazon-s3-and-cloudfront-tweaks
+!/backend/wp-content/plugins/rga-portfolio-migration
+!/backend/wp-content/plugins/only-rest-api
+!/backend/wp-content/plugins/api-add-tags-to-posts
+!/backend/wp-content/plugins/acf-to-rest-api
+!/backend/wp-content/plugins/advanced-custom-fields-pro
+!/backend/wp-content/plugins/custom-post-type-ui
+!/backend/wp-content/plugins/wp-original-media-path
+!/backend/wp-content/plugins/ari-adminer
+!/backend/wp-content/plugins/custom-endpoints
+!/backend/wp-content/plugins/acf-read-only-master
+!/backend/wp-content/plugins/shortcoder
+
+# misc
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+style.css.map
+**.pem
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# vercel
+.vercel

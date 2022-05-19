@@ -1,0 +1,300 @@
+image: node:14-buster
+
+variables:
+  ### GENERAL ###
+  PROJECT: "network"
+  ACCOUNTID: "448848705475"
+  REPO_NAME: "cw/network"
+  ### DEV  ###
+  DEV_SERVER: "network-dev.cw.rgadev.com"
+  DEV_FRONT_URL: "https://network-dev.cw.rgadev.com"
+  DEV_BACK_URL: "https://network-cms-dev.cw.rgadev.com"
+  DEV_CLOUDFRONT_ID: "E13I6I0TG4IW0S"
+  DEV_S3BUCKET:  "network-origin-dev.cw.rgadev.com"
+  ### STG  ###
+  STG_SERVER: "network-stg.cw.rgadev.com"
+  STG_FRONT_URL: "https://network-stg.cw.rgadev.com"
+  STG_BACK_URL: "https://network-cms-stg.cw.rgadev.com"
+  STG_CLOUDFRONT_ID: "E24I4J3RCOO2AS"
+  STG_S3BUCKET:  "network-origin-stg.cw.rgadev.com"
+  ### PRD  ###
+  PRD_SERVER: "network.rga.com"
+  PRD_FRONT_URL: "https://network.rga.com"
+  PRD_BACK_URL: "https://network-cms.rga.com"
+  PRD_CLOUDFRONT_ID: "E3RT3FXAPU3OI9"
+  PRD_S3BUCKET:  "network-origin.rga.com"
+
+stages:
+  - test-build
+  - push-image
+  - backend-deploy
+  - frontend-deploy
+  - frontend-flush
+
+test-build:
+  stage: test-build
+  image: rgahub/alpine-awscli-v1-bash:latest
+  tags:
+    - dind19
+  variables:
+    DOCKER_DRIVER: overlay
+  services:
+  - docker:dind
+  script:
+    - echo "Running tests"
+    - echo $CI_COMMIT_REF_NAME
+    - '[ -d backend ]                || ( echo "backend dir    ERROR:$?" && exit 1 )'
+    - '[ -d frontend ]               || ( echo "frontend dir  ERROR:$?" && exit 1 )'
+    # these values need to be set as Gitlab Variables:
+    # AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION
+    # set variables
+    - export IMAGE_PORT=8888 && echo $IMAGE_PORT #                                       <<< Set IMAGE_PORT
+    - export IMAGE_NAME=$REPO_NAME && echo $IMAGE_NAME #                          <<< Set IMAGE_NAME
+    - export HEALTHCHECK_PATH=/wp-json/wp/v2/status && echo $HEALTHCHECK_PATH #                      <<< Set HEALTHCHECK_PATH
+    - export HEALTHCHECK_STATUS_MSG='"status":"ok"' #                                 <<< Set HEALTHCHECK_STATUS_MSG
+    - export BUILD_NUMBER=${CI_PIPELINE_ID}.${CI_BUILD_REF_NAME} && echo BUILD_NUMBER $BUILD_NUMBER
+    # export environment
+    - export BUILD_IMAGE_NAME=${IMAGE_NAME}-${BUILD_NUMBER}
+    # set up aws credentials
+    - mkdir -p ~/.aws/
+    - printf "[default]\naws_access_key_id=${AWS_ACCESS_KEY_ID}\naws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" > ~/.aws/credentials;
+    - printf "[default]\nregion=$AWS_REGION\n" > ~/.aws/config;
+    # get access to aws ecr
+    - DOCKER_LOGIN=$(aws ecr get-login --no-include-email --region ${AWS_REGION})
+    - eval $DOCKER_LOGIN
+    # build image
+    - docker build -t ${BUILD_IMAGE_NAME} .
+    - CONTAINER_ID=$(docker run -d -ti --rm ${BUILD_IMAGE_NAME})
+    # wait for container to start
+    - sleep 5
+    ### START HTTP CHECK ###
+    # CANT DO normal check without a db. Will do a cli check for files
+    ### END HTTP CHECK ###
+    ### START FILE CHECK ###
+    # THis is a sad little check to see if the config files were coppied over correctly.
+    - HTACCESS_EXITCODE=$(docker exec  $CONTAINER_ID cat /var/www/html/.htaccess | grep -q wp-json)
+    - if [[ $HTACCESS_EXITCODE -ne 0 ]]; then echo "htaccess failed"; docker stop ${CONTAINER_ID} && docker rmi -f ${BUILD_IMAGE_NAME}; exit 1; else echo "HTACCESS_EXITCODE CODE passed"; fi
+    - CONFIG_EXITCODE=$(docker exec  $CONTAINER_ID cat /var/www/html/wp-config.php | grep -q JWT_AUTH)
+    - if [[ $CONFIG_EXITCODE -ne 0 ]]; then echo "wp-config.php failed"; docker stop ${CONTAINER_ID} && docker rmi -f ${BUILD_IMAGE_NAME}; exit 1; else echo " CONFIG_EXITCODE passed"; fi
+    ### START FILE CHECK ###
+    # clean up running container
+    - docker stop ${CONTAINER_ID}
+  only:
+    - master
+    - develop
+
+push-image:
+  stage: push-image
+  image: rgahub/alpine-awscli-v1-bash:latest
+  tags:
+    - dind19
+  variables:
+    DOCKER_DRIVER: overlay
+  services:
+  - docker:dind
+  script:
+    # set variables
+    - export IMAGE_NAME=$REPO_NAME && echo IMAGE_NAME $IMAGE_NAME #                          <<< Set IMAGE_NAME
+    - export ECS_REPO=${ACCOUNTID}.dkr.ecr.${AWS_REGION}.amazonaws.com && echo ECS_REPO $ECS_REPO # <<< Set ECS_REPO
+    - export BUILD_NUMBER=${CI_PIPELINE_ID} && echo BUILD_NUMBER $BUILD_NUMBER
+    # export environment
+    - export BUILD_IMAGE_NAME=${IMAGE_NAME}-${BUILD_NUMBER}
+    # set up aws credentials
+    - mkdir -p ~/.aws/
+    - printf "[default]\naws_access_key_id=${AWS_ACCESS_KEY_ID}\naws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" > ~/.aws/credentials;
+    - printf "[default]\nregion=$AWS_REGION\n" > ~/.aws/config;
+    # get access to aws ecr
+    - DOCKER_LOGIN=$(aws ecr get-login --no-include-email --region ${AWS_REGION})
+    - eval $DOCKER_LOGIN
+    # build, tag and push image
+    - docker build -t ${BUILD_IMAGE_NAME} .
+    - docker tag ${BUILD_IMAGE_NAME} ${ECS_REPO}/${IMAGE_NAME}:${BUILD_NUMBER}
+    - docker push ${ECS_REPO}/${IMAGE_NAME}:${BUILD_NUMBER}
+    # clean up images
+    - docker rmi -f ${BUILD_IMAGE_NAME}
+    - docker rmi -f ${ECS_REPO}/${IMAGE_NAME}:${BUILD_NUMBER}
+  only:
+    - master
+    - develop
+
+.template: &backend-deploy
+  stage: backend-deploy
+  image: rgahub/alpine-awscli-v1-bash:latest
+  tags:
+    - dind19
+  script:
+    # set variables
+    - export ENV=$ENV
+    # export environment variables
+    - export BUILD_NUMBER=${CI_PIPELINE_ID} && echo BUILD_NUMBER $BUILD_NUMBER
+    - printf "NETWORK_BUILD_NUMBER=$BUILD_NUMBER\n" > /tmp/.env
+    - printf "$NETWORK_ENV" >> /tmp/.env
+    - sed -i 's/\r//g' /tmp/.env
+    - >
+      set -a;
+      source /tmp/.env
+    # set up aws credentials
+    - mkdir -p ~/.aws/
+    - printf "[default]\naws_access_key_id=$AWS_ACCESS_KEY_ID\naws_secret_access_key=$AWS_SECRET_ACCESS_KEY\n" > ~/.aws/credentials;
+    - printf "[default]\nregion=$AWS_REGION\n" > ~/.aws/config;
+    # set script permissions
+    - chmod +x deploy.sh ops/scripts/aws-stack-check.sh
+    # kick off update stack
+    - ./deploy.sh -d -s -e ${ENV} -t ${BUILD_NUMBER} -r ${AWS_REGION}
+
+.template: &frontend-deploy
+  stage: frontend-deploy
+  cache:
+    key: ${CI_PIPELINE_ID}.${CI_BUILD_REF_NAME}.${ENV}
+    paths:
+      - ./frontend/build
+  script:
+    - echo "Starting $ENV $PROJECT  Deploy"
+    - export NODE_ENV=$ENV && echo $NODE_ENV
+    - echo "Building $ENV $PROJECT frontend"
+    - echo "set variables"
+    - export BUILD_NUMBER=${CI_PIPELINE_ID} && echo $BUILD_NUMBER
+    - printf "NETWORK_BUILD_NUMBER=$BUILD_NUMBER\n" > /tmp/.env
+    - printf "$NETWORK_ENV" >> /tmp/.env
+    - sed -i 's/\r//g' /tmp/.env
+    - >
+      set -a;
+      source /tmp/.env
+    - cd ./frontend
+    - echo "npm install"
+    - npm install
+    - echo "npm run build"
+    - npm run build
+    - echo "start list built files"
+    - cd ../
+    - find ./frontend/build -type f
+    - echo "end list built files"
+    - echo "deploy static assets frontend"
+    - echo "install awscli"
+    - apt-get update
+    - apt-get install -y awscli
+    - mkdir -p ~/.aws/
+    - printf "[default]\naws_access_key_id=$AWS_ACCESS_KEY_ID\naws_secret_access_key=$AWS_SECRET_ACCESS_KEY\n" > ~/.aws/credentials;
+    - printf "[default]\nregion=$AWS_REGION\n" > ~/.aws/config;
+    - find ./frontend/build -type f
+    - echo "aws s3 sync frontend/build/ s3://${S3BUCKET} --delete"
+    - aws s3 sync frontend/build/ s3://${S3BUCKET} --delete
+
+.template: &frontend-flush
+  stage: frontend-flush
+  image: rgahub/alpine-awscli-v1-bash:latest
+  tags:
+    - dind19
+  script:
+    - echo "flush the CDN cache..."
+    - mkdir -p ~/.aws/
+    - printf "[default]\naws_access_key_id=$AWS_ACCESS_KEY_ID\naws_secret_access_key=$AWS_SECRET_ACCESS_KEY\n" > ~/.aws/credentials;
+    - export CLOUDFRONT_ID="${CLOUDFRONT_ID}"
+    - chmod +x ops/scripts/cloudfront-cache-invalidate.sh
+    - ./ops/scripts/cloudfront-cache-invalidate.sh -d ${CLOUDFRONT_ID} -i "/*" -o -r ${AWS_REGION} -v
+
+### START DEV ###
+dev-backend-deploy:
+  <<: *backend-deploy
+  variables:
+    ENV: 'dev'
+    NETWORK_ENV: $NETWORK_ENV_DEV
+  environment:
+    name: DEV Application Server
+    url: $DEV_BACK_URL
+  only:
+    - develop
+dev-frontend-deploy:
+  <<: *frontend-deploy
+  variables:
+    ENV: 'dev'
+    NETWORK_ENV: $NETWORK_ENV_DEV
+    S3BUCKET: $DEV_S3BUCKET
+  environment:
+    name: dev
+    url: $DEV_FRONT_URL
+  only:
+    - develop
+dev-frontend-flush:
+  <<: *frontend-flush
+  variables:
+    ENV: 'dev'
+    NETWORK_ENV: $NETWORK_ENV_DEV
+    CLOUDFRONT_ID: $DEV_CLOUDFRONT_ID
+  environment:
+    name: DEV Flush Cache
+    url: $DEV_FRONT_URL
+  only:
+    - develop
+### STOP DEV ###
+### START STG ###
+stg-backend-deploy:
+  <<: *backend-deploy
+  variables:
+    ENV: 'stg'
+    NETWORK_ENV: $NETWORK_ENV_STG
+  environment:
+    name: STG Application Server
+    url: $STG_BACK_URL
+  only:
+    - master
+stg-frontend-deploy:
+  <<: *frontend-deploy
+  variables:
+    ENV: 'stg'
+    NETWORK_ENV: $NETWORK_ENV_STG
+    S3BUCKET: $STG_S3BUCKET
+  environment:
+    name: stg
+    url: $STG_FRONT_URL
+  only:
+    - master
+stg-frontend-flush:
+  <<: *frontend-flush
+  variables:
+    ENV: 'stg'
+    NETWORK_ENV: $NETWORK_ENV_STG
+    CLOUDFRONT_ID: $STG_CLOUDFRONT_ID
+  environment:
+    name: STG Flush Cache
+    url: $STG_FRONT_URL
+  only:
+    - master
+### STOP STG ###
+### START PRD ###
+prd-backend-deploy:
+  <<: *backend-deploy
+  variables:
+    ENV: 'prd'
+    NETWORK_ENV: $NETWORK_ENV_PRD
+  environment:
+    name: PRD Application Server
+    url: $PRD_BACK_URL
+  only:
+    - master
+  when: manual
+prd-frontend-deploy:
+  <<: *frontend-deploy
+  variables:
+    ENV: 'prd'
+    NETWORK_ENV: $NETWORK_ENV_PRD
+    S3BUCKET: $PRD_S3BUCKET
+  environment:
+    name: prd
+    url: $PRD_FRONT_URL
+  only:
+    - master
+  when: manual
+prd-frontend-flush:
+  <<: *frontend-flush
+  variables:
+    ENV: 'prd'
+    NETWORK_ENV: $NETWORK_ENV_PRD
+    CLOUDFRONT_ID: $PRD_CLOUDFRONT_ID
+  environment:
+    name: PRD Flush Cache
+    url: $PRD_FRONT_URL
+  only:
+    - master
+  when: manual
+### STOP PRD ###
