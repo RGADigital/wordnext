@@ -5,6 +5,7 @@ module.exports = {
       'secure.gravatar.com',
       '0.gravatar.com',
       'localhost',
+      'cms',
     ],
   },
 }

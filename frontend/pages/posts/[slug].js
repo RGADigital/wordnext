@@ -36,7 +36,7 @@ export default function Post({ post, posts, preview }) {
                 </title>
                 <meta
                   property="og:image"
-                  content={post.featuredImage?.sourceUrl}
+                  content={post.featuredImage?.sourceUrl?.replace('http://localhost:8000/', 'http://cms/')}
                 />
               </Head>
               <PostHeader
@@ -78,6 +78,6 @@ export async function getStaticPaths() {
 
   return {
     paths: allPosts.edges.map(({ node }) => `/posts/${node.slug}`) || [],
-    fallback: 'blocking',
+    fallback: 'blocking' 
   }
 }

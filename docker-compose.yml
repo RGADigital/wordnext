@@ -29,6 +29,8 @@ services:
       - WORDPRESS_DB_HOST=${WORDNEXT_WORDPRESS_DB_HOST}
       - WORDPRESS_DB_USER=${WORDNEXT_WORDPRESS_DB_USER}
       - WORDPRESS_DB_PASSWORD=${WORDNEXT_WORDPRESS_DB_PASSWORD}
+    extra_hosts:
+      - "localhost:172.16.222.111"
   frontend:
     depends_on:
       - cms
@@ -39,6 +41,7 @@ services:
       - node-modules:/app/frontend/node_modules
     ports:
       - "3000:3000"
+      - "5054:5054"
     environment:
       - WORDNEXT_API_URL=${WORDNEXT_API_URL}
       - WORDNEXT_AUTH_REFRESH_TOKEN=${WORDNEXT_AUTH_REFRESH_TOKEN}
