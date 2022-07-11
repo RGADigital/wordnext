@@ -8,34 +8,23 @@ frontend/.next/*
 !frontend/build/.empty
 
 # backend
-backend/*
-!backend/.htaccess
-!backend/wp-config.php
-!backend/wp-content/
+cms/*
+!cms/.htaccess
+!cms/wp-config.php
+!cms/wp-content/
 
-backend/wp-content/*
-!backend/wp-content/plugins
+cms/wp-content/*
+!cms/wp-content/plugins
 
-/backend/wp-content/plugins/*
-!/backend/wp-content/plugins/rest-api
-!/backend/wp-content/plugins/updraftplus
-!/backend/wp-content/plugins/jwt-authentication-for-wp-rest-api
-!/backend/wp-content/plugins/disable-rest-api-and-require-jwt-oauth-authentication
-!/backend/wp-content/plugins/custom-headers
-!/backend/wp-content/plugins/api-status
-!/backend/wp-content/plugins/amazon-s3-and-cloudfront
-!/backend/wp-content/plugins/amazon-s3-and-cloudfront-tweaks
-!/backend/wp-content/plugins/rga-portfolio-migration
-!/backend/wp-content/plugins/only-rest-api
-!/backend/wp-content/plugins/api-add-tags-to-posts
-!/backend/wp-content/plugins/acf-to-rest-api
-!/backend/wp-content/plugins/advanced-custom-fields-pro
-!/backend/wp-content/plugins/custom-post-type-ui
-!/backend/wp-content/plugins/wp-original-media-path
-!/backend/wp-content/plugins/ari-adminer
-!/backend/wp-content/plugins/custom-endpoints
-!/backend/wp-content/plugins/acf-read-only-master
-!/backend/wp-content/plugins/shortcoder
+/cms/wp-content/plugins/*
+!/cms/wp-content/plugins/acf-read-only-master
+!/cms/wp-content/plugins/advanced-custom-fields-pro
+!/cms/wp-content/plugins/ari-adminer
+!/cms/wp-content/plugins/custom-post-type-ui
+!/cms/wp-content/plugins/duplicate-wp-page-post
+!/cms/wp-content/plugins/fakerpress
+!/cms/wp-content/plugins/wp-graphql
+!/cms/wp-content/plugins/wp-graphql-acf-develop
 
 # misc
 .DS_Store
