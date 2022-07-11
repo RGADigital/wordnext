@@ -30,6 +30,7 @@ Database is built on MySQL.
 ```
 
 3. Go to the plugins section and activate them all.
+4. Go to `Settings > Permalinks` and change that to `Post name`. Save the changes 
 
 ### GraphiQL
 
