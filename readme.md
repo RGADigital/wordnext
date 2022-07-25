@@ -32,6 +32,14 @@ Database is built on MySQL.
 3. Go to the plugins section and activate them all.
 4. Go to `Settings > Permalinks` and change that to `Post name`. Save the changes 
 
+## Updraft Backup
+
+If you messed up the WordPress project by any reason, here we have a backup to restore the default settings. You should use the UpDraft plugin incorporated as a WordPress Plugin and upload those files.
+
+```
+https://drive.google.com/drive/folders/1gaoWLw4CZ-DzuBRdpTFLSwb9sjOwPPSl?usp=sharing
+```
+
 ### GraphiQL
 
 The [WPGraphQL](https://www.wpgraphql.com/) plugin also gives you access to a GraphQL IDE directly from your WordPress Admin, allowing you to inspect and play around with the GraphQL API.

@@ -1,14 +1,14 @@
 import styles from './hero.module.scss';
 
-const Hero = ({ heroData }) => {
+const Hero = ({ backgroundColor, title, body }) => {
     return (
         <section
             className={styles.wrapper}
-            style={{ backgroundColor: heroData.backgroundColor }}
+            style={{ backgroundColor: backgroundColor }}
         >
             <div className={styles.content}>
-                <h2>{heroData.title}</h2>
-                <p>{heroData.body}</p>
+                <h2>{title}</h2>
+                <p>{body}</p>
             </div>
         </section>
     );
