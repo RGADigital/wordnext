@@ -1,0 +1,17 @@
+.wrapper {
+    article {
+        padding: 3rem;
+
+        .header {
+            margin-bottom: 2rem;
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .sub_header {
+                font-size: 0.9rem;
+            }
+        }
+    }
+}

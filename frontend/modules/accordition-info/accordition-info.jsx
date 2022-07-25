@@ -1,12 +1,13 @@
-import Container from '../../components/container';
+import { Container } from '../../components';
+import styles from './accordition-info.module.scss';
 
 const AccorditionInfo = ({ accorditionData }) => {
     return (
-        <section>
+        <section className={styles.wrapper}>
             <ul>
                 {accorditionData.map((question, index) => {
                     return (
-                        <li key={`${question.title}${index}`} style={{ marginBottom: '2rem' }}>
+                        <li key={`${question.title}${index}`}>
                             <Container>
                                 <details>
                                     <summary>{question.title}</summary>

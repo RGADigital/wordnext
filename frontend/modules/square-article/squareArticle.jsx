@@ -1,25 +1,29 @@
-import Container from '../../components/container';
+import { Container } from '../../components';
+import styles from './square-article.module.scss';
 
 const SquareArticle = ({ articleData }) => {
     return (
-        <section>
-            <ul style={{ display: 'flex', flexDirection: 'row' }}>
-                {articleData.map((article, index) => (
-                    <li key={`${article.title}${index}`} style={{ width: '50%' }}>
-                        <Container>
-                            <article style={{ borderRadius: '5px', boxShadow: '0px 5px 15px 0px rgba(0,0,0,0.12)' }}>
-                                <a alt={article.url.title} href={article.url.url}>
-                                    <img style={{ width: '100%', height: '400px', objectFit: 'cover' }} src={article.image.sourceUrl} />
-                                    <div style={{ padding: '2rem' }}>
+        <section className={styles.wrapper}>
+            <Container>
+                <ul>
+                    {articleData.map((article, index) => (
+                        <li key={`${article.title}${index}`}>
+                            <article>
+                                <a
+                                    alt={article.url.title}
+                                    href={article.url.url}
+                                >
+                                    <img src={article.image.sourceUrl} />
+                                    <div className={styles.card_body}>
                                         <h3>{article.title}</h3>
                                         <p>{article.description}</p>
                                     </div>
                                 </a>
                             </article>
-                        </Container>
-                    </li>
-                ))}
-            </ul>
+                        </li>
+                    ))}
+                </ul>
+            </Container>
         </section>
     );
 };

@@ -1,0 +1,37 @@
+/**
+ * Build font-face declaration
+ * @param {string} name // font usage name
+ * @param {string|number} weight // the base weight of the font
+ * @param {string} style // font style type
+ * @param {string} scr // font file name
+ * @returns font-face declaration
+ */
+@mixin get-variable-font-face(
+    $name: 'MontserratAlternates',
+    $weight: normal,
+    $style: normal
+) {
+    $font-path: '/assets/fonts/';
+    @font-face {
+        font-display: swap;
+        font-family: #{$name};
+        font-style: #{$style};
+        font-weight: #{$weight};
+        src: url('#{$font-path}.ttf') format('truetype'),
+            url('#{$font-path}.ttf') format('truetype'),
+            url('#{$font-path}.ttf') format('truetype'),
+            url('#{$font-path}.ttf') format('truetype');
+    }
+}
+
+// Helvetica Now R/GA Custom
+@supports (font-variation-settings: normal) {
+    // Regular
+    @include get-variable-font-face('MontserratAlternates', normal, normal);
+    // Regular Italic
+    @include get-variable-font-face('MontserratAlternates', normal, italic);
+    // Bold
+    @include get-variable-font-face('MontserratAlternates', 600, normal);
+    // Bold Italic
+    @include get-variable-font-face('MontserratAlternates', 600, italic);
+}

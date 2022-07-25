@@ -1,13 +1,11 @@
-import Alert from '../components/alert';
-import Footer from '../components/footer';
-import Meta from '../components/meta';
+import { Footer, Meta, Nav } from '../components';
 
 const Layout = ({ preview, children }) => {
     return (
         <>
             <Meta />
             <div className="min-h-screen">
-                <Alert preview={preview} />
+                <Nav />
                 <main>{children}</main>
             </div>
             <Footer />

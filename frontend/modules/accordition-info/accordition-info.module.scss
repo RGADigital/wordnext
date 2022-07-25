@@ -1,0 +1,15 @@
+.wrapper {
+    ul {
+        li {
+            margin-bottom: 2rem;
+
+            summary {
+                margin-bottom: 1rem;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}

@@ -1,13 +1,16 @@
-import Container from '../../components/container';
+import { Container } from '../../components';
+import styles from './article-full.module.scss';
 
 const ArticleFull = ({ article }) => {
     return (
-        <section>
+        <section className={styles.wrapper}>
             <Container>
-                <article style={{ padding: '3rem' }}>
-                    <div style={{ marginBottom: '2rem' }}>
-                        <h2 style={{ fontSize: '2rem' }}>{article.title}</h2>
-                        <span style={{ fontSize: '0.9rem' }}>{`${article.author} - ${article.date}`}</span>
+                <article>
+                    <div className={styles.header}>
+                        <h2>{article.title}</h2>
+                        <span
+                            className={styles.sub_header}
+                        >{`${article.author} - ${article.date}`}</span>
                     </div>
                     <p>{article.body}</p>
                 </article>
