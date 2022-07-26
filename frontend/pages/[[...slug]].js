@@ -6,7 +6,7 @@ import { GET_ALL_PAGES, GET_PAGE_BY_SLUG } from 'graphql/queries/pages-query';
 import Layout from 'layouts/layout';
 import BlockRender from '../lib/block-render';
 
-export default function Post({ data, preview }) {
+export default function Page({ data, preview }) {
     const router = useRouter();
 
     if (!router.isFallback && !data?.slug) {
@@ -23,29 +23,61 @@ export default function Post({ data, preview }) {
     );
 }
 
-export async function getStaticProps({ params, preview = false, previewData }) {
+export const getStaticProps = async ({
+    params,
+    preview = false,
+    previewData,
+}) => {
+    const slugFiltered = () => {
+        if (params.slug) {
+            return params.slug[0] ? params.slug[0] : '/';
+        } else {
+            return '/';
+        }
+    };
+
     const { data } = await client.query({
         query: GET_PAGE_BY_SLUG,
         variables: {
-            slug: params.slug,
+            slug: slugFiltered(),
         },
     });
+
+    if (!data.pageBy || slugFiltered() === 'homepage') {
+        return {
+            notFound: true,
+        };
+    }
 
     return {
         props: {
             preview,
             data: data.pageBy,
         },
+        revalidate: 1,
     };
-}
+};
 
-export async function getStaticPaths() {
+export const getStaticPaths = async () => {
     const { data } = await client.query({
         query: GET_ALL_PAGES,
     });
 
+    const allPages = [...data.pages.nodes];
+
+    allPages.push({ __typename: 'Page', slug: '' });
+
+    const paths =
+        allPages.map(({ slug }) => {
+            return {
+                params: {
+                    slug: [slug !== '/' ? `/${slug}` : null],
+                },
+            };
+        }) || [];
+
     return {
-        paths: data.pages.nodes.map(({ slug }) => `/${slug}`) || [],
+        paths,
         fallback: 'blocking',
     };
-}
+};
