@@ -7,10 +7,15 @@ const AccorditionInfo = ({ accorditionData }) => {
             <ul>
                 {accorditionData.map((question, index) => {
                     return (
-                        <li key={`${question.title}${index}`}>
+                        <li
+                            className={styles.item}
+                            key={`${question.title}${index}`}
+                        >
                             <Container>
                                 <details>
-                                    <summary>{question.title}</summary>
+                                    <summary className={styles.summary}>
+                                        {question.title}
+                                    </summary>
                                     <p>{question.description}</p>
                                 </details>
                             </Container>

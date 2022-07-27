@@ -1,12 +1,13 @@
 import styles from './nav.module.scss';
+import Link from 'next/link';
 
 const Nav = () => {
     return (
         <nav className={styles.nav}>
-            <a href="/">
+            <Link href="/" passHref>
                 <small>RGA</small>
-            </a>
-            <a href="/frequent-questions">Frequent Questions</a>
+            </Link>
+            <Link href="/frequent-questions">Frequent Questions</Link>
         </nav>
     );
 };

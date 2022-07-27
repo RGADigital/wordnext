@@ -2,7 +2,10 @@ import { useRouter } from 'next/router';
 import ErrorPage from 'next/error';
 import Head from 'next/head';
 import client from '../../graphql/clients/endpoint-client';
-import { GET_ALL_ARTICLES, GET_ARTICLE_BY_SLUG } from '../../graphql/queries/articles-query';
+import {
+    GET_ALL_ARTICLES,
+    GET_ARTICLE_BY_SLUG,
+} from '../../graphql/queries/articles-query';
 import Layout from '../../layouts/layout';
 import { ArticleFull } from '../../modules';
 
@@ -18,7 +21,7 @@ export default function Post({ data, preview }) {
             <Head>
                 <title>{data.title}</title>
             </Head>
-            <ArticleFull article={data.sections.sections[0].articleFull} />
+            <ArticleFull article={data.container.modules[0].articleFull} />
         </Layout>
     );
 }

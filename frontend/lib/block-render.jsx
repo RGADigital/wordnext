@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { AccorditionInfo, Hero, SquareArticle } from 'modules';
 import { ContentTypeMap } from './content-types';
 

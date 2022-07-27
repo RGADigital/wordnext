@@ -1,13 +1,13 @@
 import { gql } from '@apollo/client';
-import { ARTICLE_FULL_FRAGMENT } from './fragments/articleFull';
+import { ARTICLE_FULL_FRAGMENT } from './fragments/article-full';
 
 export const GET_ARTICLE_BY_SLUG = gql`
     query getArticleBySlug($slug: String) {
         articleBy(slug: $slug) {
             slug
             title
-            sections {
-                sections {
+            container {
+                modules {
                     ...ArticleFullFragment
                 }
             }

@@ -1,6 +1,6 @@
 import { Footer, Meta, Nav } from '../components';
 
-const Layout = ({ preview, children }) => {
+const Layout = ({ children }) => {
     return (
         <>
             <Meta />

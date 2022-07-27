@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const SQUARE_ARTICLE_FRAGMENT = gql`
-    fragment SquareArticleFragment on Page_Sections_Sections_SquareArticle {
+    fragment SquareArticleFragment on Page_Container_Modules_SquareArticle {
         squareArticle {
             title
             description

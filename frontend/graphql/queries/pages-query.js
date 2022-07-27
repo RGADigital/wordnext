@@ -1,13 +1,18 @@
 import { gql } from '@apollo/client';
-import { ACCORDITION_INFO_FRAGMENT, HERO_FRAGMENT, LARGE_ARTICLE_FRAGMENT, SQUARE_ARTICLE_FRAGMENT } from './fragments';
+import {
+    ACCORDITION_INFO_FRAGMENT,
+    HERO_FRAGMENT,
+    LARGE_ARTICLE_FRAGMENT,
+    SQUARE_ARTICLE_FRAGMENT,
+} from './fragments';
 
-export const GET_PAGE_BY_SLUG = gql`
-    query pageBySlug($slug: String) {
-        pageBy(uri: $slug) {
+export const GET_PAGE_BY_URI = gql`
+    query pageByURI($uri: String) {
+        pageBy(uri: $uri) {
             title
-            slug
-            sections {
-                sections {
+            uri
+            container {
+                modules {
                     ...HeroFragment
                     ...SquareArticleFragment
                     ...LargeArticleFragment
@@ -26,7 +31,7 @@ export const GET_ALL_PAGES = gql`
     query getAllPages {
         pages {
             nodes {
-                slug
+                uri
             }
         }
     }

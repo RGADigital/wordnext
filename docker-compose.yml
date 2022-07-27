@@ -43,7 +43,7 @@ services:
             - '3000:3000'
             - '5054:5054'
         environment:
-            - WORDNEXT_API_URL=${WORDNEXT_API_URL}
+            - API_URL=${API_URL}
             - WORDNEXT_AUTH_REFRESH_TOKEN=${WORDNEXT_AUTH_REFRESH_TOKEN}
             - WORDNEXT_PREVIEW_SECRET=${WORDNEXT_PREVIEW_SECRET}
     storybook:

@@ -1,14 +1,14 @@
 .nav {
+    align-items: center;
+    background: #000;
     display: flex;
     justify-content: space-between;
-    background: black;
     padding: 1rem 4rem;
-    align-items: center;
 
     a {
         color: $color-white;
-        text-decoration: none;
         font-size: 1.6rem;
+        text-decoration: none;
 
         &:hover {
             cursor: pointer;

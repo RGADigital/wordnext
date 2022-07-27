@@ -5,15 +5,17 @@ const SquareArticle = ({ articleData }) => {
     return (
         <section className={styles.wrapper}>
             <Container>
-                <ul>
+                <ul className={styles.list}>
                     {articleData.map((article, index) => (
-                        <li key={`${article.title}${index}`}>
-                            <article>
+                        <li
+                            className={styles.item}
+                            key={`${article.title}${index}`}
+                        >
+                            <article className={styles.article}>
                                 <a
                                     alt={article.url.title}
                                     href={article.url.url}
                                 >
-                                    <img src={article.image.sourceUrl} />
                                     <div className={styles.card_body}>
                                         <h3>{article.title}</h3>
                                         <p>{article.description}</p>

@@ -24,14 +24,14 @@
     }
 }
 
-// Helvetica Now R/GA Custom
-@supports (font-variation-settings: normal) {
-    // Regular
-    @include get-variable-font-face('MontserratAlternates', normal, normal);
-    // Regular Italic
-    @include get-variable-font-face('MontserratAlternates', normal, italic);
-    // Bold
-    @include get-variable-font-face('MontserratAlternates', 600, normal);
-    // Bold Italic
-    @include get-variable-font-face('MontserratAlternates', 600, italic);
-}
+// // Helvetica Now R/GA Custom
+// @supports (font-variation-settings: normal) {
+//     // Regular
+//     @include get-variable-font-face('MontserratAlternates', normal, normal);
+//     // Regular Italic
+//     @include get-variable-font-face('MontserratAlternates', normal, italic);
+//     // Bold
+//     @include get-variable-font-face('MontserratAlternates', 600, normal);
+//     // Bold Italic
+//     @include get-variable-font-face('MontserratAlternates', 600, italic);
+// }

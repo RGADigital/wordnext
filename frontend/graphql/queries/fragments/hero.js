@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const HERO_FRAGMENT = gql`
-    fragment HeroFragment on Page_Sections_Sections_Hero {
+    fragment HeroFragment on Page_Container_Modules_Hero {
         hero {
             title
             body

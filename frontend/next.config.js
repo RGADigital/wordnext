@@ -20,6 +20,7 @@ module.exports = {
                 alias: {
                     ...config.resolve.alias,
                     graphql: path.resolve(__dirname, 'graphql/'),
+                    lib: path.resolve(__dirname, 'lib/'),
                     hooks: path.resolve(__dirname, 'hooks/'),
                     layouts: path.resolve(__dirname, 'layouts'),
                     components: path.resolve(__dirname, 'components/'),

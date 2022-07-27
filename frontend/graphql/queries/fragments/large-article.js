@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const LARGE_ARTICLE_FRAGMENT = gql`
-    fragment LargeArticleFragment on Page_Sections_Sections_LargeArticle {
+    fragment LargeArticleFragment on Page_Container_Modules_LargeArticle {
         largeArticle {
             title
             description
