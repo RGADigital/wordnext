@@ -7,16 +7,18 @@ import {
 } from './fragments';
 
 export const GET_PAGE_BY_URI = gql`
-    query pageByURI($uri: String) {
+    query pageByURI($uri: String, $language: LanguageCodeEnum!) {
         pageBy(uri: $uri) {
-            title
-            uri
-            container {
-                modules {
-                    ...HeroFragment
-                    ...SquareArticleFragment
-                    ...LargeArticleFragment
-                    ...AccorditionInfoFragment
+            translation(language: $language) {
+                title
+                uri
+                container {
+                    modules {
+                        ...HeroFragment
+                        ...SquareArticleFragment
+                        ...LargeArticleFragment
+                        ...AccorditionInfoFragment
+                    }
                 }
             }
         }
@@ -32,6 +34,9 @@ export const GET_ALL_PAGES = gql`
         pages {
             nodes {
                 uri
+                language {
+                    code
+                }
             }
         }
     }

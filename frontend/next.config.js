@@ -26,8 +26,17 @@ module.exports = {
                     components: path.resolve(__dirname, 'components/'),
                     modules: path.resolve(__dirname, 'modules/'),
                     styles: path.resolve(__dirname, 'styles/'),
+                    intl: path.resolve(__dirname, 'intl/'),
                 },
             },
         };
+    },
+    i18n: {
+        // These are all the locales you want to support in
+        // your application
+        locales: ['en', 'es'],
+        // This is the default locale you want to be used when visiting
+        // a non-locale prefixed path e.g. `/hello`
+        defaultLocale: 'en',
     },
 };

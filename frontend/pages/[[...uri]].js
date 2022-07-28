@@ -3,6 +3,7 @@ import client from 'graphql/clients/endpoint-client';
 import { GET_ALL_PAGES, GET_PAGE_BY_URI } from 'graphql/queries/pages-query';
 import Layout from 'layouts/layout';
 import BlockRender from 'lib/block-render';
+import { LANGUAGES } from 'lib/constants';
 
 export default function Page({ data }) {
     return (
@@ -15,13 +16,17 @@ export default function Page({ data }) {
     );
 }
 
-export const getStaticProps = async ({ params: { uri } }) => {
+export const getStaticProps = async ({ params: { uri }, locale }) => {
+    console.log(locale);
     const {
-        data: { pageBy: page },
+        data: {
+            pageBy: { translation: page },
+        },
     } = await client.query({
         query: GET_PAGE_BY_URI,
         variables: {
             uri: !uri ? 'homepage' : uri.join('/'),
+            language: LANGUAGES[locale],
         },
     });
 
@@ -30,6 +35,7 @@ export const getStaticProps = async ({ params: { uri } }) => {
     return {
         props: {
             data: page,
+            messages: (await import(`intl/${locale}.json`)).default,
         },
         revalidate: 10,
     };
