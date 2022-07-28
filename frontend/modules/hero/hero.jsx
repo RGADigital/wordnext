@@ -4,8 +4,6 @@ import { useTranslations } from 'next-intl';
 const Hero = ({ backgroundColor, title, body }) => {
     const t = useTranslations('Hero');
 
-    console.log(t);
-
     return (
         <section
             className={styles.wrapper}

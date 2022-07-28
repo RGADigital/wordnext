@@ -17,7 +17,6 @@ export default function Page({ data }) {
 }
 
 export const getStaticProps = async ({ params: { uri }, locale }) => {
-    console.log(locale);
     const {
         data: {
             pageBy: { translation: page },
