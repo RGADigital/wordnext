@@ -1,7 +1,12 @@
-import '../styles/index.css'
+import 'styles/reset.scss';
+import { NextIntlProvider } from 'next-intl';
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+    return (
+        <NextIntlProvider messages={pageProps.messages}>
+            <Component {...pageProps} />
+        </NextIntlProvider>
+    );
 }
 
-export default MyApp
+export default MyApp;

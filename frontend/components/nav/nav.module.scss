@@ -1,0 +1,19 @@
+.nav {
+    align-items: center;
+    background: #000;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 4rem;
+
+    a {
+        color: $color-white;
+        font-size: 1.6rem;
+        text-decoration: none;
+
+        &:hover {
+            cursor: pointer;
+            transform: translateY(-2px);
+            transition: transform 0.4s ease-in-out;
+        }
+    }
+}
