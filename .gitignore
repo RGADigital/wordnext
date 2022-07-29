@@ -17,14 +17,20 @@ cms/wp-content/*
 !cms/wp-content/plugins
 
 /cms/wp-content/plugins/*
+!/cms/wp-content/plugins/acf-options-for-polylang
 !/cms/wp-content/plugins/acf-read-only-master
 !/cms/wp-content/plugins/advanced-custom-fields-pro
 !/cms/wp-content/plugins/ari-adminer
 !/cms/wp-content/plugins/custom-post-type-ui
 !/cms/wp-content/plugins/duplicate-wp-page-post
 !/cms/wp-content/plugins/fakerpress
+!/cms/wp-content/plugins/headless-cms
+!/cms/wp-content/plugins/polylang-pro
+!/cms/wp-content/plugins/updraftplus
 !/cms/wp-content/plugins/wp-graphql
 !/cms/wp-content/plugins/wp-graphql-acf-develop
+!/cms/wp-content/plugins/wp-graphql-jwt-authentication-0.5.2
+!/cms/wp-content/plugins/wp-graphql-polylang-0.6.0
 
 # misc
 .DS_Store
