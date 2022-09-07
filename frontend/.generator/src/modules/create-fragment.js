@@ -19,12 +19,12 @@ const FRAGMENT_INJECTION_CHOICES = queriesFiles.map((file) => {
 async function createFragment(moduleName) {
     let fragmentName;
 
-    if (moduleName) {
+    if (!moduleName) {
         const { fName } = await prompt([
             {
                 type: 'input',
                 name: 'fName',
-                message: 'Insert fragment name:?',
+                message: 'Insert fragment name:',
                 required: true,
             },
         ]);
