@@ -103,7 +103,7 @@ function copyModuleFilesFromTemplate(moduleName, folderName) {
         case ContentTypeMap.${toUpperCaseScript(moduleName)}_TYPE:
                 return <${toPascalCase(
                     moduleName
-                )} key={index} {...section['${moduleName.toLowerCase()}']} />;,`
+                )} key={index} {...section['${toPascalCase(moduleName)}']} />;`
     );
 
     fs.writeFileSync(blockRenderFolder, blockRenderFile, 'utf-8');
