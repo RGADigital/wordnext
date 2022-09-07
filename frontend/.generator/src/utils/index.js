@@ -6,6 +6,8 @@ const {
     TEMPLATE_DIR_PATH,
     TEMPLATE_FRAGMENT_DIR_PATH,
     FRAGMENT_PATH,
+    CONTENT_TYPES_FILE,
+    BLOCK_RENDER_FILE,
 } = require('../config');
 
 function copyComponentFilesFromTemplate(componentName, folderName) {
@@ -68,6 +70,41 @@ function copyModuleFilesFromTemplate(moduleName, folderName) {
     });
 
     console.log('Files copied from template.');
+
+    let contentTypesFile = fs.readFileSync(CONTENT_TYPES_FILE, 'utf8');
+
+    contentTypesFile = fileInjectionContent.replace(
+        /\/\* IMPORT_CONTENT_TYPE \*\//g,
+        `/* IMPORT_CONTENT_TYPE */
+        ${toUpperCaseScript(
+            moduleName
+        )}_TYPE: 'Page_Container_Modules_${toPascalCase(moduleName)}',`
+    );
+
+    fs.writeFileSync(CONTENT_TYPES_FILE, contentTypesFile, 'utf-8');
+
+    console.log(`Module injected in ${path.join(CONTENT_TYPES_FILE)}`);
+
+    let blockRenderFile = fs.readFileSync(BLOCK_RENDER_FILE, 'utf8');
+
+    blockRenderFile = fileInjectionContent.replace(
+        /\/\* IMPORT_MODULE \*\//g,
+        `/* IMPORT_MODULE */
+        ${toPascalCase(moduleName)},`
+    );
+
+    blockRenderFile = fileInjectionContent.replace(
+        /\/\* IMPORT_CASE \*\//g,
+        `/* IMPORT_CASE */
+        case ContentTypeMap.${toUpperCaseScript(moduleName)}_TYPE:
+                return <${toPascalCase(
+                    moduleName
+                )} key={index} {...section['${moduleName.toLowerCase()}']} />;,`
+    );
+
+    fs.writeFileSync(BLOCK_RENDER_FILE, blockRenderFile, 'utf-8');
+
+    console.log(`Module injected in ${path.join(BLOCK_RENDER_FILE)}`);
 }
 
 function copyFragmentFilesFromTemplate(
