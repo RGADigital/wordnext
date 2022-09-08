@@ -79,8 +79,8 @@ function copyModuleFilesFromTemplate(moduleName, folderName) {
         /\/\* IMPORT_CONTENT_TYPE \*\//g,
         `/* IMPORT_CONTENT_TYPE */
         ${toUpperCaseScript(
-            moduleName
-        )}_TYPE: 'Page_Container_Modules_${toPascalCase(moduleName)}',`
+            folderName
+        )}_TYPE: 'Page_Container_Modules_${toPascalCase(folderName)}',`
     );
 
     fs.writeFileSync(contentTypesFolder, contentTypesFile, 'utf-8');
@@ -94,16 +94,18 @@ function copyModuleFilesFromTemplate(moduleName, folderName) {
     blockRenderFile = blockRenderFile.replace(
         /\/\* IMPORT_MODULE \*\//g,
         `/* IMPORT_MODULE */
-        ${toPascalCase(moduleName)},`
+        ${toPascalCase(folderName)},`
     );
 
     blockRenderFile = blockRenderFile.replace(
         /\/\* IMPORT_CASE \*\//g,
         `/* IMPORT_CASE */
-        case ContentTypeMap.${toUpperCaseScript(moduleName)}_TYPE:
+        case ContentTypeMap.${toUpperCaseScript(folderName)}_TYPE:
                 return <${toPascalCase(
-                    moduleName
-                )} key={index} {...section['${toPascalCase(moduleName)}']} />;`
+                    folderName
+                )} key={index} {...section['${firstCharLowerCase(
+            folderName
+        )}']} />;`
     );
 
     fs.writeFileSync(blockRenderFolder, blockRenderFile, 'utf-8');
@@ -135,7 +137,7 @@ function copyFragmentFilesFromTemplate(
         );
         fileContent = fileContent.replace(
             /Page_Container_Modules_Module/g,
-            `Page_Container_Modules_${toCapFirstScript(fragmentName)}`
+            `Page_Container_Modules_${toPascalCase(fragmentName)}`
         );
 
         const destination = path.join(
@@ -153,7 +155,7 @@ function copyFragmentFilesFromTemplate(
 
     fileInjectionContent = fileInjectionContent.replace(
         /\/\* INJECTION_IMPORT \*\//g,
-        `/* INJECTION IMPORT */
+        `/* INJECTION_IMPORT */
         ${toUpperCaseScript(fragmentName)}_FRAGMENT,`
     );
 
@@ -165,7 +167,7 @@ function copyFragmentFilesFromTemplate(
 
     fileInjectionContent = fileInjectionContent.replace(
         /\"\"\"FRAGMENT_IN_IMPORT\"\"\"/g,
-        `"""FRAGMENT_DECONSTRUCTION"""
+        `"""FRAGMENT_IN_IMPORT"""
         \$\{${toUpperCaseScript(fragmentName)}_FRAGMENT}`
     );
 
@@ -213,8 +215,7 @@ function updateFragmentsIndex(fragmentName, fragmentFolder) {
 
 const toPascalCase = (sentence) =>
     sentence
-        .replace('-', ' ')
-        .replace('_', ' ')
+        .replace(/-|_/g, ' ')
         .split(' ')
         .map((word) => word[0].toUpperCase().concat(word.slice(1)))
         .join('');
@@ -229,14 +230,24 @@ const toKebabCase = (str) =>
 
 const toCapFirstScript = (sentence) =>
     sentence
-        .replace('-', ' ')
-        .replace('_', ' ')
+        .replace(/-|_/g, ' ')
         .split(' ')
         .map((word) => word[0].toUpperCase().concat(word.slice(1)))
         .join('_');
 
 const toUpperCaseScript = (sentence) =>
     toCapFirstScript(sentence).toUpperCase();
+
+const firstCharLowerCase = (str) =>
+    str
+        .replace(/-|_/g, ' ')
+        .split(' ')
+        .map((word, index) =>
+            index > 0
+                ? word[0].toUpperCase().concat(word.slice(1))
+                : word[0].toLowerCase().concat(word.slice(1))
+        )
+        .join('');
 
 module.exports = {
     toKebabCase,
@@ -249,4 +260,5 @@ module.exports = {
     updateFragmentsIndex,
     toCapFirstScript,
     toUpperCaseScript,
+    firstCharLowerCase,
 };
