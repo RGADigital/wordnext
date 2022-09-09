@@ -27,6 +27,7 @@ export const getStaticProps = async ({ params: { uri }, locale }) => {
             uri: !uri ? 'homepage' : uri.join('/'),
             language: LANGUAGES[locale],
         },
+        errorPolicy: 'none',
     });
 
     if (!page) return { notFound: true };
