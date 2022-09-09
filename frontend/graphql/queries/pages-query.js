@@ -15,7 +15,7 @@ export const GET_PAGE_BY_URI = gql`
                 uri
                 container {
                     modules {
-                        """FRAGMENT_DECONSTRUCTION"""
+                        # FRAGMENT_DECONSTRUCTION
                         ...HeroFragment
                         ...SquareArticleFragment
                         ...LargeArticleFragment
@@ -25,7 +25,7 @@ export const GET_PAGE_BY_URI = gql`
             }
         }
     }
-    """FRAGMENT_IN_IMPORT"""
+    # FRAGMENT_IN_IMPORT
     ${HERO_FRAGMENT}
     ${SQUARE_ARTICLE_FRAGMENT}
     ${LARGE_ARTICLE_FRAGMENT}

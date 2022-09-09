@@ -11,13 +11,13 @@ export const GET_ARTICLE_BY_SLUG = gql`
             title
             container {
                 modules {
-                    """FRAGMENT_DECONSTRUCTION"""
+                    # FRAGMENT_DECONSTRUCTION
                     ...ArticleFullFragment
                 }
             }
         }
     }
-    """FRAGMENT_IN_IMPORT"""
+    # FRAGMENT_IN_IMPORT
     ${ARTICLE_FULL_FRAGMENT}
 `;
 
