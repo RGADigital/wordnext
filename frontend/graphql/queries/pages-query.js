@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 import {
+    /* INJECTION_IMPORT */
     ACCORDITION_INFO_FRAGMENT,
     HERO_FRAGMENT,
     LARGE_ARTICLE_FRAGMENT,
@@ -14,6 +15,7 @@ export const GET_PAGE_BY_URI = gql`
                 uri
                 container {
                     modules {
+                        # FRAGMENT_DECONSTRUCTION
                         ...HeroFragment
                         ...SquareArticleFragment
                         ...LargeArticleFragment
@@ -23,6 +25,7 @@ export const GET_PAGE_BY_URI = gql`
             }
         }
     }
+    # FRAGMENT_IN_IMPORT
     ${HERO_FRAGMENT}
     ${SQUARE_ARTICLE_FRAGMENT}
     ${LARGE_ARTICLE_FRAGMENT}

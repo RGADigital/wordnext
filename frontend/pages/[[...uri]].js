@@ -4,6 +4,7 @@ import { GET_ALL_PAGES, GET_PAGE_BY_URI } from 'graphql/queries/pages-query';
 import Layout from 'layouts/layout';
 import BlockRender from 'lib/block-render';
 import { LANGUAGES } from 'lib/constants';
+import handleGraphErrors from '../graphql/handleErrors';
 
 export default function Page({ data }) {
     return (
@@ -21,13 +22,18 @@ export const getStaticProps = async ({ params: { uri }, locale }) => {
         data: {
             pageBy: { translation: page },
         },
-    } = await client.query({
-        query: GET_PAGE_BY_URI,
-        variables: {
-            uri: !uri ? 'homepage' : uri.join('/'),
-            language: LANGUAGES[locale],
-        },
-    });
+    } = await client
+        .query({
+            query: GET_PAGE_BY_URI,
+            variables: {
+                uri: !uri ? 'homepage' : uri.join('/'),
+                language: LANGUAGES[locale],
+            },
+            errorPolicy: 'none',
+        })
+        .catch((e) => {
+            handleGraphErrors(e);
+        });
 
     if (!page) return { notFound: true };
 

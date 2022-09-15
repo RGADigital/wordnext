@@ -1,5 +1,10 @@
 /* eslint-disable indent */
-import { AccorditionInfo, Hero, SquareArticle } from 'modules';
+import {
+    /* IMPORT_MODULE */
+    AccorditionInfo,
+    Hero,
+    SquareArticle,
+} from 'modules';
 import { ContentTypeMap } from './content-types';
 
 const BlockRender = ({ block }) => {
@@ -21,6 +26,7 @@ const BlockRender = ({ block }) => {
                         accorditionData={section.accorditionInfo}
                     />
                 );
+            /* IMPORT_CASE */
             default:
                 break;
         }
