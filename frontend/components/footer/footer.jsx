@@ -1,9 +1,9 @@
 import styles from './footer.module.scss';
 
-const Footer = () => {
+const Footer = ({ data }) => {
     return (
         <footer className={styles.footer}>
-            <small style={{ fontSize: '2rem' }}>© RGA</small>
+            <small style={{ fontSize: '2rem' }}>© {data.copyright}</small>
         </footer>
     );
 };

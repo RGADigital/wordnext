@@ -160,13 +160,13 @@ function copyFragmentFilesFromTemplate(
     );
 
     fileInjectionContent = fileInjectionContent.replace(
-        /\"\"\"FRAGMENT_DECONSTRUCTION\"\"\"/g,
+        /\# FRAGMENT_DECONSTRUCTION/g,
         `# FRAGMENT_DECONSTRUCTION
         ...${toPascalCase(fragmentName)}Fragment`
     );
 
     fileInjectionContent = fileInjectionContent.replace(
-        /\"\"\"FRAGMENT_IN_IMPORT\"\"\"/g,
+        /\# FRAGMENT_IN_IMPORT/g,
         `# FRAGMENT_IN_IMPORT
         \$\{${toUpperCaseScript(fragmentName)}_FRAGMENT}`
     );

@@ -16,7 +16,7 @@ const SquareArticle = ({ articleData }) => {
                                     alt={article.url.title}
                                     href={article.url.url}
                                 >
-                                    <div className={styles.card_body}>
+                                    <div className={styles['card-body']}>
                                         <h3>{article.title}</h3>
                                         <p>{article.description}</p>
                                     </div>
