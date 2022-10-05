@@ -13,6 +13,44 @@ export const GET_PAGE_BY_URI = gql`
             translation(language: $language) {
                 title
                 uri
+                seo {
+                    canonical
+                    title
+                    metaDesc
+                    metaRobotsNoindex
+                    metaRobotsNofollow
+                    opengraphAuthor
+                    opengraphDescription
+                    opengraphTitle
+                    opengraphDescription
+                    opengraphImage {
+                        altText
+                        sourceUrl
+                        srcSet
+                        mediaDetails {
+                            width
+                            height
+                        }
+                        mimeType
+                    }
+                    opengraphUrl
+                    opengraphSiteName
+                    opengraphPublishedTime
+                    opengraphModifiedTime
+                    twitterTitle
+                    twitterDescription
+                    twitterImage {
+                        altText
+                        sourceUrl
+                        srcSet
+                    }
+                    breadcrumbs {
+                        url
+                        text
+                    }
+                    readingTime
+                    fullHead
+                }
                 container {
                     modules {
                         # FRAGMENT_DECONSTRUCTION

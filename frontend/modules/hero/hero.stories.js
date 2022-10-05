@@ -1,3 +1,4 @@
+import { NextIntlProvider } from 'next-intl';
 import Hero from './hero';
 
 const Component = {
@@ -25,4 +26,8 @@ const Component = {
 
 export default Component;
 
-export const Default = (args) => <Hero {...args} />;
+export const Default = (args) => (
+    <NextIntlProvider locale="EN">
+        <Hero {...args} />
+    </NextIntlProvider>
+);
